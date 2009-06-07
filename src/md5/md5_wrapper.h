@@ -5,7 +5,8 @@
 
   /*
  * MD5 string/file hasher written in C++.
- * Copyright (C) 2009  David Vas, Anubisss - <http://code.google.com/p/md5-hasher/>
+ * Copyright (C) 2009  David Vas, Anubisss
+ * <http://code.google.com/p/md5-hasher/>
 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
