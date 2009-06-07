@@ -21,14 +21,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//include protection
-#ifndef MD5WRAPPER_H
-#define MD5WRAPPER_H
+#ifndef _MD5WRAPPER_H_
+#define _MD5WRAPPER_H_
 
-//basic includes
 #include <string>
 
-//forwards
 class MD5;
 
 class md5wrapper
@@ -47,6 +44,7 @@ class md5wrapper
 		 * a valid std::string
 		 */
 		std::string convToString(unsigned char *bytes);
+
 	public:
 		//constructor
 		md5wrapper();
@@ -69,8 +67,6 @@ class md5wrapper
 		std::string getHashFromFile(std::string filename);
 };
 
-
-//include protection
 #endif
 
 /*
