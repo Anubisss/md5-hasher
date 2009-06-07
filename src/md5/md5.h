@@ -1,7 +1,6 @@
 /*
  *	This is the C++ implementation of the MD5 Message-Digest
  *	Algorithm desrcipted in RFC 1321.
- *	I translated the C code from this RFC to C++.
  *	There is no warranty.
  *
  *	Feb. 12. 2005
