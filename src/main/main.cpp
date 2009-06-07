@@ -1,4 +1,4 @@
- /*
+/*
  * MD5 string/file hasher written in C++.
  * Copyright (C) 2009  David Vas, Anubisss
  * <http://code.google.com/p/md5-hasher/>
@@ -19,7 +19,23 @@
 
 #include "md5_wrapper.h"
 
+#include <string>
+#include <iostream>
+
 int main(int argc, const char* argv[])
 {
+    if(argc <= 1)
+        return 0;
+
+    md5wrapper md5;
+    
+    std::string str;
+    std::string str_md5;
+    
+    str = argv[1];
+    str_md5 = md5.getHashFromString(str);
+    
+    std::cout << "MD5 Hash: " << str_md5;
+
     return 0;
 }

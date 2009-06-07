@@ -3,7 +3,7 @@
  *    Benjamin Grüdelbach
  */
 
- /*
+/*
  * MD5 string/file hasher written in C++.
  * Copyright (C) 2009  David Vas, Anubisss
  * <http://code.google.com/p/md5-hasher/>
