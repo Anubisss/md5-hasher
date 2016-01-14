@@ -4,7 +4,7 @@
  *     There is no warranty.
  *
  *     Feb. 12. 2005
- *     Benjamin Grüdelbach
+ *     Benjamin Grï¿½delbach
  */
 
 /*
@@ -52,9 +52,9 @@
 
 static unsigned char PADDING[64] =
 {
-  0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+  0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 /* F, G, H and I are basic MD5 functions. */
@@ -127,10 +127,10 @@ void MD5::MD5Update(MD5_CTX *context, unsigned char *input, unsigned int inputLe
      */
     if(inputLen >= partLen)
     {
-        MD5_memcpy((POINTER)&context->buffer[index], (POINTER)input, partLen);
+        memcpy(&context->buffer[index], input, partLen);
         MD5Transform(context->state, context->buffer);
 
-        for(i = partLen; i + 63 < inputLen; i += 64)
+        for(i = partLen; i + 64 < inputLen; i += 64)
             MD5Transform(context->state, &input[i]);
 
         index = 0;
@@ -139,9 +139,7 @@ void MD5::MD5Update(MD5_CTX *context, unsigned char *input, unsigned int inputLe
         i = 0;
 
     /* Buffer remaining input */
-    MD5_memcpy((POINTER)&context->buffer[index],
-                (POINTER)&input[i],
-                inputLen-i);
+    memcpy(&context->buffer[index], &input[i], inputLen-i);
 }
 
 /*
@@ -172,7 +170,8 @@ void MD5::MD5Final(unsigned char digest[16], MD5_CTX *context)
     /*
      * Zeroize sensitive information.
      */
-    MD5_memset((POINTER)context, 0, sizeof(*context));
+    memset(&context->buffer, 0, sizeof &context->buffer);
+    memset(&context->count, 0, sizeof &context->count);
 }
 
 /*
@@ -180,7 +179,7 @@ void MD5::MD5Final(unsigned char digest[16], MD5_CTX *context)
  */
 void MD5::MD5Transform(unsigned long int state[4], unsigned char block[64])
 {
-    unsigned long int a = state[0], b = state[1], c = state[2], d = state[3], x[16];
+    unsigned int a = state[0], b = state[1], c = state[2], d = state[3], x[16];
 
     Decode (x, block, 64);
 
@@ -214,7 +213,6 @@ void MD5::MD5Transform(unsigned long int state[4], unsigned char block[64])
     GG (a, b, c, d, x[ 9], S21, 0x21e1cde6); /* 25 */
     GG (d, a, b, c, x[14], S22, 0xc33707d6); /* 26 */
     GG (c, d, a, b, x[ 3], S23, 0xf4d50d87); /* 27 */
-
     GG (b, c, d, a, x[ 8], S24, 0x455a14ed); /* 28 */
     GG (a, b, c, d, x[13], S21, 0xa9e3e905); /* 29 */
     GG (d, a, b, c, x[ 2], S22, 0xfcefa3f8); /* 30 */
@@ -265,7 +263,7 @@ void MD5::MD5Transform(unsigned long int state[4], unsigned char block[64])
     /*
      * Zeroize sensitive information.
      */
-    MD5_memset((POINTER)x, 0, sizeof (x));
+    memset(x, 0, sizeof x);
 }
 
 /*
@@ -274,9 +272,7 @@ void MD5::MD5Transform(unsigned long int state[4], unsigned char block[64])
  */
 void MD5::Encode(unsigned char *output, unsigned long int *input, unsigned int len)
 {
-    unsigned int i, j;
-
-    for(i = 0, j = 0; j < len; i++, j += 4) {
+    for(unsigned int i = 0, j = 0; j < len; i++, j += 4) {
         output[j] = (unsigned char)(input[i] & 0xff);
         output[j+1] = (unsigned char)((input[i] >> 8) & 0xff);
         output[j+2] = (unsigned char)((input[i] >> 16) & 0xff);
@@ -288,36 +284,13 @@ void MD5::Encode(unsigned char *output, unsigned long int *input, unsigned int l
  * Decodes input (unsigned char) into output (unsigned long int). Assumes len is
  * a multiple of 4.
  */
-void MD5::Decode(unsigned long int *output, unsigned char *input, unsigned int len)
+void MD5::Decode(unsigned int *output, unsigned char *input, unsigned int len)
 {
-      unsigned int i, j;
-
-    for(i = 0, j = 0; j < len; i++, j += 4)
-        output[i] = ((unsigned long int)input[j]) |
-                (((unsigned long int)input[j+1]) << 8) |
-                (((unsigned long int)input[j+2]) << 16) |
-                (((unsigned long int)input[j+3]) << 24);
-}
-
-/*
- * Note: Replace "for loop" with standard memcpy if possible.
- */
-void MD5::MD5_memcpy(POINTER output, POINTER input, unsigned int len)
-{
-    unsigned int i;
-
-    for(i = 0; i < len; i++)
-        output[i] = input[i];
-}
-
-/*
- * Note: Replace "for loop" with standard memset if possible.
- */
-void MD5::MD5_memset(POINTER output,int value,unsigned int len)
-{
-    unsigned int i;
-    for(i = 0; i < len; i++)
-        ((char*)output)[i] = (char)value;
+    for(unsigned int i = 0, j = 0; j < len; i++, j += 4)
+        output[i] = ((unsigned int)input[j]) |
+                (((unsigned int)input[j+1]) << 8) |
+                (((unsigned int)input[j+2]) << 16) |
+                (((unsigned int)input[j+3]) << 24);
 }
 
 /*

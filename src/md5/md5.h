@@ -4,7 +4,7 @@
  *    There is no warranty.
  *
  *    Feb. 12. 2005
- *    Benjamin Grüdelbach
+ *    Benjamin Grï¿½delbach
  */
 
 /*
@@ -34,8 +34,7 @@
 #define _MD5_H_
 
 #include <string>
-
-typedef unsigned char *POINTER;
+#include <cstring>
 
 typedef struct
 {
@@ -50,15 +49,13 @@ class MD5
     private:
         void MD5Transform(unsigned long int state[4], unsigned char block[64]);
         void Encode(unsigned char*, unsigned long int*, unsigned int);
-        void Decode(unsigned long int*, unsigned char*, unsigned int);
-        void MD5_memcpy(POINTER, POINTER, unsigned int);
-        void MD5_memset(POINTER, int, unsigned int);
+        void Decode(unsigned int*, unsigned char*, unsigned int);
 
     public:
         void MD5Init(MD5_CTX*);
         void MD5Update(MD5_CTX*, unsigned char*, unsigned int);
         void MD5Final(unsigned char [16], MD5_CTX*);
-
+        
     MD5(){};
 };
 
